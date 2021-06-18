@@ -36,8 +36,7 @@ public class Graph {
     }
 
     private VertexNode<Integer> getNodeFromIdentifier(String identifier){
-        VertexNode<Integer> node = vertices_hashmap.get(identifier);
-        return node;
+        return vertices_hashmap.get(identifier);
     }
 
     public void addEdge(String from_node, String to_node, Integer weight){
@@ -51,8 +50,12 @@ public class Graph {
         }
     }
 
+    public Integer getWeight(String from_node, String to_node){
+        return this.weights.get(new Weight<>(from_node,to_node));
+    }
+
     public ArrayList<String> getAdjacentVertices(String node_identifier){
-        ArrayList<String> vertices_list = (ArrayList<String>) edges.getOrDefault(node_identifier, new ArrayList<String>());
+        ArrayList<String> vertices_list = edges.getOrDefault(node_identifier, new ArrayList<>());
         return vertices_list;
     }
 
@@ -69,11 +72,14 @@ public class Graph {
 
         ArrayList<String> bfs = new ArrayList<>();
 
-        for(VertexNode<Integer> u: this.vertices){
+        for(VertexNode<Integer> u : this.vertices){
             u.color = colors.WHITE;
             u.d = Integer.MAX_VALUE;
             u.parent = null;
         }
+
+//        ArrayList<VertexNode<Integer>> k = getVertices();
+//        k.forEach(s -> System.out.print(s.d+","+s.color + " "));
 
         VertexNode<Integer> s = getNodeFromIdentifier(source_identifier);
         s.color = colors.GRAY;
@@ -88,7 +94,7 @@ public class Graph {
 
             for(String v_identifier:getAdjacentVertices(u.identifier)){
                 VertexNode<Integer> v = getNodeFromIdentifier(v_identifier);
-                if(v.color == colors.WHITE){
+                if(v.color.equals(colors.WHITE)){
                     v.parent = u;
                     v.color = colors.GRAY;
                     v.d = u.d + 1;
@@ -101,7 +107,6 @@ public class Graph {
         }
 
 //        String bfs_result = String.join(", ", bfs );
-
 
         Optional<ArrayList<String>> opt = Optional.ofNullable(bfs);
         return opt;
@@ -117,7 +122,7 @@ public class Graph {
 
         for(String v_identifier : adju){
             VertexNode<Integer> v = getNodeFromIdentifier(v_identifier);
-            if(v.color == colors.WHITE){
+            if(v.color.equals(colors.WHITE)){
                 v.parent = u;
                 DFSVisit(v,time,l);
 
@@ -144,7 +149,7 @@ public class Graph {
         }
 
         for(VertexNode<Integer> u : getVertices()){
-            if(u.color == colors.WHITE){
+            if(u.color.equals(colors.WHITE)){
                 ArrayList<String> l = new ArrayList<>();
                 DFSVisit(u,time,l);
                 forest.add(l);
@@ -155,6 +160,82 @@ public class Graph {
         Optional<ArrayList<ArrayList<String>>> opt = Optional.ofNullable(forest);
         return opt;
 
+    }
+
+
+    private void dijkstra(VertexNode<Integer> source_vertex){
+        PriorityQueue<VertexNode<Integer>> queue = new PriorityQueue<>();
+        VertexNode<Integer> source = source_vertex;
+
+        // insert vertices into priorityQueue
+        for(var u : this.vertices){
+            u.color = colors.WHITE;
+            queue.add(u);
+        }
+
+        source.value = 0;
+        source.parent = null;
+
+
+        while(true){
+            VertexNode<Integer> min_node = queue.poll();
+
+            if(min_node == null) return;
+
+            min_node.color = colors.GRAY;
+
+            for(var v_identifier : this.getAdjacentVertices(min_node.identifier)){
+                VertexNode<Integer> v = this.getNodeFromIdentifier(v_identifier);
+                if(v.color.equals(colors.WHITE)){
+//                    var k = getWeight(min_node.identifier, v.identifier);
+                    if(((getWeight(min_node.identifier, v.identifier) + v.value ) < v.value)){
+                        v.value = getWeight(min_node.identifier, v.identifier) + v.value;
+                        v.parent = min_node;
+//                        System.out.println("v.p: "+ v.parent.identifier);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    public ArrayList<VertexNode<Integer>> findPath(String source_vertex_identifier, String destination_vertex_identifier){
+        ArrayList<VertexNode<Integer>> path = new ArrayList<>();
+        Integer path_length = 0;
+
+        VertexNode<Integer> s = getNodeFromIdentifier(source_vertex_identifier);
+        VertexNode<Integer> d = getNodeFromIdentifier((destination_vertex_identifier));
+
+        int i = 0;
+        for(var u : this.vertices){
+            u.parent = null;
+            u.color = colors.WHITE;
+            u.value = Integer.MAX_VALUE;
+            u.d = 0;
+            u.f = 0;
+        }
+
+        this.dijkstra(s);
+
+        if(d.value == Integer.MAX_VALUE) {
+            System.out.println("Destination "+ destination_vertex_identifier +" not reachable from source "+ source_vertex_identifier);
+            return path;
+        }
+
+        path.add(d);
+
+        do{
+            var p = d.parent;
+            path_length += getWeight(p.identifier,d.identifier);
+            path.add(p);
+            d = p;
+        }
+        while(s != d);
+
+        Collections.reverse(path);
+        System.out.print("path Length: "+ path_length +" path: ");
+        return path;
     }
 
 

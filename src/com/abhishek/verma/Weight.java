@@ -12,6 +12,21 @@ public class Weight<T,S>{
 
     @Override
     public String toString(){
-        return new String('['+from_node.toString()+','+to_node.toString()+']');
+        return '['+from_node.toString()+','+to_node.toString()+']';
+    }
+
+    @Override
+    public int hashCode(){
+        return 89 + from_node.hashCode() + to_node.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other){
+
+        if(!(other instanceof Weight )) return false;
+        Weight<T,S> o = (Weight<T,S>) other;
+        if(this == o) return true;
+        return (from_node.toString().compareTo(o.from_node.toString()) == 0)
+                        && (to_node.toString().compareTo(o.to_node.toString()) == 0);
     }
 }

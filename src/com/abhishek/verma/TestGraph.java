@@ -22,12 +22,20 @@ public class TestGraph {
         g.addNode("D",4);
         g.addNode("E",2);
 
+        g.addNode("X",10);
+        g.addNode("Y",20);
+        g.addNode("Z",30);
+
+
         g.addEdge("A","B",4);
         g.addEdge("B","C",1);
         g.addEdge("C","A",4);
         g.addEdge("D","E",1);
         g.addEdge("B","E",5);
         g.addEdge("C","D",5);
+
+        g.addEdge("X","Y",14);
+        g.addEdge("Y","Z",9);
 
         ArrayList<String> adv = g.getAdjacentVertices("B");
 
@@ -43,13 +51,27 @@ public class TestGraph {
 
         Optional<ArrayList<String>> bfs = g.BFS("A");
 
+        System.out.print("BFS: ");
         bfs.ifPresent(s -> System.out.print(s+", "));
 
+        System.out.println();
 
         Optional<ArrayList<ArrayList<String>>> dfs = g.DFS(true);
 
+        System.out.print("DFS-Forest: ");
         dfs.ifPresent(s->System.out.print(s+", "));
 
+
+        ArrayList<VertexNode<Integer>> path = g.findPath("A", "X");
+
+        ArrayList<String> path_idfs = new ArrayList<>();
+
+        for(var u : path){
+            path_idfs.add(u.identifier);
+        }
+
+        String joined = String.join("-> ", path_idfs);
+        System.out.println(joined);
     }
 
 }

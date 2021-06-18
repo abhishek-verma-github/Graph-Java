@@ -3,7 +3,7 @@ package com.abhishek.verma;
 import java.lang.Integer;
 
 
-public class VertexNode<T> {
+public class VertexNode<T> implements Comparable<VertexNode<T>>{
     public String identifier;
     public T value;
     public VertexNode parent = null;
@@ -40,5 +40,14 @@ public class VertexNode<T> {
         }
     }
 
+
+
+    @Override
+    public int compareTo(VertexNode<T> o) {
+
+        if(this.value == o.value) return 0;
+        else if((int) this.value > (int) o.value) return 1;
+        else return -1;
+    }
 }
 
