@@ -78,8 +78,6 @@ public class Graph {
             u.parent = null;
         }
 
-//        ArrayList<VertexNode<Integer>> k = getVertices();
-//        k.forEach(s -> System.out.print(s.d+","+s.color + " "));
 
         VertexNode<Integer> s = getNodeFromIdentifier(source_identifier);
         s.color = colors.GRAY;
