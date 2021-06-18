@@ -62,7 +62,8 @@ public class TestGraph {
         dfs.ifPresent(s->System.out.print(s+", "));
 
 
-        ArrayList<VertexNode<Integer>> path = g.findPath("A", "X");
+        System.out.println('\n');
+        ArrayList<VertexNode<Integer>> path = g.findPath("A", "E");
 
         ArrayList<String> path_idfs = new ArrayList<>();
 

@@ -49,5 +49,7 @@ public class VertexNode<T> implements Comparable<VertexNode<T>>{
         else if((int) this.value > (int) o.value) return 1;
         else return -1;
     }
+
+
 }
 

@@ -17,7 +17,7 @@ public class Weight<T,S>{
 
     @Override
     public int hashCode(){
-        return 89 + from_node.hashCode() + to_node.hashCode();
+        return from_node.hashCode() + to_node.hashCode();
     }
 
     @Override

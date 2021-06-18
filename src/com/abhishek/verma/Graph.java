@@ -170,28 +170,32 @@ public class Graph {
         // insert vertices into priorityQueue
         for(var u : this.vertices){
             u.color = colors.WHITE;
-            queue.add(u);
+            u.value = Integer.MAX_VALUE;
+            u.parent = null;
+//            queue.add(u);
         }
 
         source.value = 0;
         source.parent = null;
-
+        queue.add(source);
 
         while(true){
             VertexNode<Integer> min_node = queue.poll();
+//            System.out.println("min polled: "+min_node.identifier+" value: "+min_node.value);
 
             if(min_node == null) return;
 
             min_node.color = colors.GRAY;
 
-            for(var v_identifier : this.getAdjacentVertices(min_node.identifier)){
+            for(String v_identifier : this.getAdjacentVertices(min_node.identifier)){
                 VertexNode<Integer> v = this.getNodeFromIdentifier(v_identifier);
                 if(v.color.equals(colors.WHITE)){
 //                    var k = getWeight(min_node.identifier, v.identifier);
-                    if(((getWeight(min_node.identifier, v.identifier) + v.value ) < v.value)){
-                        v.value = getWeight(min_node.identifier, v.identifier) + v.value;
+                    System.out.println("min-node:"+min_node.identifier+" ad-node:"+v.identifier+"ad-node-val: "+v.value);
+                    if((getWeight(min_node.identifier, v.identifier) + min_node.value ) < v.value){
+                        v.value = getWeight(min_node.identifier, v.identifier) + min_node.value;
                         v.parent = min_node;
-//                        System.out.println("v.p: "+ v.parent.identifier);
+                        queue.add(v);
                     }
                 }
             }
@@ -207,16 +211,11 @@ public class Graph {
         VertexNode<Integer> s = getNodeFromIdentifier(source_vertex_identifier);
         VertexNode<Integer> d = getNodeFromIdentifier((destination_vertex_identifier));
 
-        int i = 0;
-        for(var u : this.vertices){
-            u.parent = null;
-            u.color = colors.WHITE;
-            u.value = Integer.MAX_VALUE;
-            u.d = 0;
-            u.f = 0;
-        }
 
         this.dijkstra(s);
+
+//        this.vertices.forEach(x->System.out.print(x.value+", "));
+
 
         if(d.value == Integer.MAX_VALUE) {
             System.out.println("Destination "+ destination_vertex_identifier +" not reachable from source "+ source_vertex_identifier);
@@ -226,7 +225,7 @@ public class Graph {
         path.add(d);
 
         do{
-            var p = d.parent;
+            VertexNode<Integer> p = d.parent;
             path_length += getWeight(p.identifier,d.identifier);
             path.add(p);
             d = p;
