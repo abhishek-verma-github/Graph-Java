@@ -100,17 +100,16 @@ public class Graph {
                 }
             }
             u.color = colors.BLACK;
-            bfs.add(u.identifier);
+            bfs.add(u.identifier+"("+u.d.toString()+")");
 
         }
 
 //        String bfs_result = String.join(", ", bfs );
-
         Optional<ArrayList<String>> opt = Optional.ofNullable(bfs);
         return opt;
     }
 
-
+    // subroutine to DFS
     private void DFSVisit(VertexNode<Integer> u, int time, ArrayList<String> l){
         time++;
         u.d = time ;
@@ -123,10 +122,8 @@ public class Graph {
             if(v.color.equals(colors.WHITE)){
                 v.parent = u;
                 DFSVisit(v,time,l);
-
             }
         }
-
         time++;
         u.f = time;
         u.color = colors.BLACK;
@@ -138,14 +135,14 @@ public class Graph {
         ArrayList<ArrayList<String>> forest = new ArrayList<>();
 
         Integer time = 0;
-
+        // reset vertices for traversal:
         for(VertexNode<Integer> u : getVertices()){
             u.color = colors.WHITE;
             u.d = 0;
             u.d = 0;
             u.parent = null;
         }
-
+        // recursiverly call DFS-visit subroutine for every vertex:
         for(VertexNode<Integer> u : getVertices()){
             if(u.color.equals(colors.WHITE)){
                 ArrayList<String> l = new ArrayList<>();
@@ -193,9 +190,7 @@ public class Graph {
                     }
                 }
             }
-
         }
-
     }
 
     public ArrayList<VertexNode<Integer>> findPath(String source_vertex_identifier, String destination_vertex_identifier){
